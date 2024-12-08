@@ -46,3 +46,24 @@ class Jugador():
         else:
             raise Exception(error)
         
+    def registrar_jugador(self, nombre, clave):
+        con = Conexion.crear_conexion()
+        if not con:
+            return
+        cursor = con.cursor()
+        cursor.execute("SELECT id FROM jugador WHERE usuario=%s", (nombre,))
+        obtenido = cursor.fetchone()
+        if obtenido:
+            Conexion.cerrar_conexion(con)
+            raise Exception("El usuario ya existe")
+        
+        cursor.execute("INSERT INTO jugador (usuario, clave) VALUES (%s, %s)", (nombre, clave,))
+        con.commit()
+        cursor.execute("SELECT id FROM jugador WHERE usuario=%s", (nombre,))
+        jugador = cursor.fetchone()
+        print(jugador)
+
+        Conexion.cerrar_conexion(con)
+        if jugador:
+            return self.obtener_usurio(jugador[0])
+        

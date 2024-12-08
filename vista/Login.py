@@ -22,6 +22,10 @@ class Login():
         else:
             self.lblErr.config(text="Campos faltantes.\nDebes ingresar tu nombre y contraseña.")
 
+    def cerrar(self):
+        self.root.login = False
+        self.ventana.destroy()
+
     def __init__(self, root):
         self.root = root
         self.ventana = Toplevel(root.ventana)
@@ -58,4 +62,5 @@ class Login():
         self.nombreEntry.bind("<KeyRelease>", self.ingresarNombre)
         self.pwEntry.bind("<KeyRelease>", self.ingresarClave)
 
-        self.ventana.mainloop()
+
+        self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar)
