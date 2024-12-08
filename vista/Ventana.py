@@ -6,13 +6,22 @@ from vista.Login import Login
 class Ventana():
 
     def iniciarSeccion(self):
-        Login(self.ventana)
+        if not self.login:
+            self.login = Login(self)
+    
+    def setJugador(self, jugador):
+        self.jugador = jugador
+        if self.login:
+            self.login = None
 
     def __init__(self):
         self.ventana = tk.Tk()
-        self.ventana.title = "The Game" # Ponganle un titulo
+        self.ventana.title("The Game") # Ponganle un titulo
         self.ventana.geometry("400x300")
         self.ventana.resizable(0,0)
+
+        self.login = None
+        self.jugador = None
 
         self.label = Label(self.ventana, text="Naves y Asteroides: El Juego")
         self.label.pack()
