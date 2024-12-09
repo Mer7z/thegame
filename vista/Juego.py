@@ -11,15 +11,17 @@ import threading as th
 class Juego():
     def __init__(self, root, jugador):
         self.root = root
+        self.ventana = root.ventana
         self.jugador = jugador
         
         self.ejecutar = True
         self.fotograma = 0.016
         self.eventosTecla = []
 
-        self.root.bind("<KeyPress>", self.presionarTecla)
+        self.frJuego = Frame(self.ventana)
+        self.frJuego.place(x=0, y=0, relheight=1, relwidth=1)
         
-        self.canvas = Canvas(self.root, bg="black")
+        self.canvas = Canvas(self.frJuego, bg="black")
         self.canvas.place(x=0, y=0, relheight=1, relwidth=1) #ventana es 600x500
 
         self.dibujar_estrellas()
@@ -29,15 +31,29 @@ class Juego():
         self.contadorKills = 0
         self.kills = 0
         self.dificultad = 0
+        self.palabras = [
+            [100,"casa", "luna", "pato", "flor", "vida", "rana", "mesa", "gato", "tiza", "azul"],  # 4 letras
+            [200,"raton", "globo", "hojas", "cielo", "piano", "plaza", "nieve", "luzar", "rojas", "leche"],  # 5 letras
+            [300,"frutas", "lucero", "madera", "camino", "sender", "quesos", "cocina", "viajes", "limpie", "calend"],  # 6 letras
+            [500,"ventana", "milagro", "librera", "pastora", "amapola", "camaron", "espejos", "barroco", "cabezas", "sombrer"],  # 7 letras
+            [800,"manzana", "cascada", "tormenta", "pelicano", "elefante", "martillo", "albahaca", "monedero", "borrador", "perdices"],  # 8 letras
+            [1000,"salamandra", "teatrista", "alpestada", "balconada", "largartija", "exhibicion", "mundiales", "revolveres", "poblacion", "numeracion"],  # 9 letras
+            [2000,"espectador", "provisional", "preparados", "constructo", "montañismo", "silabacion", "desempeñar", "resolucion", "camuflaje", "justificada"]  # 10 letras
+        ]
+
+        self.txtPuntos = self.canvas.create_text(20, 450, text=f"Puntos: {self.puntos}", font=("Arial", 17), anchor="w", fill="white")
+        self.txtKills = self.canvas.create_text(20, 425, text=f"Bajas: {self.puntos}", font=("Arial", 17), anchor="w", fill="white")
+
+        self.btnSalir = Button(self.frJuego, text="Salir", command=self.root.salir_juego)
+        self.btnReiniciar = Button(self.frJuego, text="Reniciar", command=self.root.reiniciar_juego)
 
         self.nave = Nave(self, 300, 450)
         self.selAsteroide = None
         self.objetos = [
             self.nave,
-            Asteroide(self, 300, 250, self.nave),
         ] 
 
-        
+        self.ventana.bind("<KeyPress>", self.presionarTecla)
 
         self.hilos: list[th.Thread] = []
         self.hilos.append(th.Thread(target=self.dibujarObjetos))
@@ -50,6 +66,8 @@ class Juego():
 
     def dibujarObjetos(self):
         while self.ejecutar:
+            self.canvas.itemconfig(self.txtPuntos, text=f"Puntos: {self.puntos}")
+            self.canvas.itemconfig(self.txtKills, text=f"Bajas: {self.kills}")
             for objeto in self.objetos:
                 objeto.dibujar()
             time.sleep(0.001)
@@ -71,10 +89,19 @@ class Juego():
         for hilo in self.hilos:
             while hilo.is_alive():
                 hilo.join(timeout=0.1) 
-                self.root.update()
+                self.ventana.update()
+        self.frJuego.destroy()
+
+    def fin_juego(self):
+        self.ejecutar = False
+        self.canvas.create_text(300, 100, text="FIN DEL JUEGO", font=("Arial", 25), fill="red")
+        self.canvas.create_text(300, 200, text=f"Puntos: {self.puntos}", font=("Arial", 20), fill="white")
+        self.btnSalir.place(relx=0.5, rely=0.5, width=50, height=25, anchor="center")
+        self.btnReiniciar.place(relx=0.5, rely=0.5, y=30, width=50, height=25, anchor="center")
+        self.jugador.guardar_puntaje(self.puntos)
 
     def presionarTecla(self, event):
-        key = event.keysym
+        key = event.keysym.lower()
         if not self.selAsteroide:
             self.elegir_asteroide(key)
         else:
@@ -109,7 +136,14 @@ class Juego():
         randx = random.randint(0, 600)
         randy = random.randint(-30, -20)
         rands = random.randint(20, 30)
-        self.objetos.append(Asteroide(self, randx, randy, self.nave, rands, 40 + (0.5 * self.dificultad )))       
+        if self.dificultad < len(self.palabras):
+            palabras = self.palabras[self.dificultad]
+        else:
+            palabras = self.palabras[len(self.palabras)-1]
+
+        palabra = palabras[random.randrange(1, len(palabras) - 1)]
+        puntos = palabras[0]
+        self.objetos.append(Asteroide(self, randx, randy, self.nave, rands, 40 + (0.5 * self.dificultad ), palabra, puntos))       
 
     def elegir_asteroide(self, letra):
         minA = None
@@ -127,10 +161,10 @@ class Juego():
             if self.selAsteroide.recibir_disparo(letra):
                 self.nave.disparar(self.selAsteroide)
     
-    def add_kill(self):
+    def add_kill(self, puntos):
         self.kills += 1
         self.contadorKills += 1
-        self.puntos+= 100
+        self.puntos+= puntos
 
     def dibujar_estrellas(self):
         self.canvas.delete("estrellas")

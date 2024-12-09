@@ -66,4 +66,28 @@ class Jugador():
         Conexion.cerrar_conexion(con)
         if jugador:
             return self.obtener_usurio(jugador[0])
+    
+
+    def guardar_puntaje(self, puntaje):
+        if not self.id:
+            return
+        if self.puntaje < puntaje:
+            con = Conexion.crear_conexion()
+            if not con:
+                return
+            cursor = con.cursor()
+            cursor.execute("UPDATE jugador SET puntaje=%s WHERE id=%s", (puntaje, self.id,))
+            con.commit()
+            Conexion.cerrar_conexion(con)
+            self.puntaje = puntaje
+        
+    def obtener_jugadores(self):
+        con = Conexion.crear_conexion()
+        if not con:
+            return
+        cursor = con.cursor()
+        cursor.execute("SELECT * FROM jugador ORDER BY puntaje DESC")
+        datos = cursor.fetchall()
+        Conexion.cerrar_conexion(con)
+        return datos
         

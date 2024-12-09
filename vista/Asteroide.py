@@ -2,7 +2,7 @@ from vista.Objeto import Objeto
 from vista.Texto import Texto
 
 class Asteroide(Objeto):
-    def __init__(self, root, x, y, nave, size = 20, velocidad = 40, tag = ""):
+    def __init__(self, root, x, y, nave, size = 20, velocidad = 40, palabra = "", puntos = 100, tag = ""):
         super().__init__(root, x, y)
         self.nave = nave
         self.coordenadas = []
@@ -11,9 +11,10 @@ class Asteroide(Objeto):
         self.tag = tag
         self.objeto_canvas = None
         self.seleccionado = False
+        self.puntos = puntos
         
 
-        self.palabra = "Hello"
+        self.palabra = palabra
         self.velocidad = velocidad
 
         self.hijos = [
@@ -59,7 +60,8 @@ class Asteroide(Objeto):
 
             self.x = self.x + paso_x
             self.y = self.y + paso_y
-        
+            
+        self.chocar()
 
     def seleccionar(self, selec):
         self.seleccionado = selec
@@ -70,9 +72,17 @@ class Asteroide(Objeto):
         if self.palabra.lower().startswith(letra):
             self.palabra = self.palabra[1:]
             if not self.palabra:
-                self.root.add_kill()
+                self.root.add_kill(self.puntos)
                 self.destruir()
             return True
         else:
             return False
     
+    def chocar(self):
+        x1, y1, x2, y2 = self.coordenadas
+
+        nave_x1, nave_y1, nave_x2, nave_y2 = self.nave.coordenadas
+
+        if (x1 < nave_x2 and x2 > nave_x1 and y1 < nave_y2 and y2 > nave_y1):    
+            self.nave.morir()
+            self.destruir()

@@ -12,6 +12,9 @@ class Nave(Objeto):
 
 
     def dibujar(self):
+        if self.destruyendo:
+            self.canvas.delete(self.objeto_canvas)
+            return
         if not self.objeto_canvas:
             self.objeto_canvas = self.canvas.create_rectangle(self.x, self.y, self.x+self.size, self.y+self.size, fill="#28bf50", outline="white", tags=self.tag)
         else:
@@ -20,9 +23,6 @@ class Nave(Objeto):
     
     def procesarCuadro(self, delta):                                                                
         pass
-    
-    def destruir(self):
-        self.canvas.delete(self.objeto_canvas)
 
     def disparar(self, asteroide):
         dnx = self.x + (self.coordenadas[2] - self.x) / 2
@@ -30,4 +30,9 @@ class Nave(Objeto):
         dax = asteroide.x + (asteroide.coordenadas[2] - asteroide.x) / 2
         day = asteroide.y + (asteroide.coordenadas[3] - asteroide.y) / 2
         self.root.objetos.append(Bala(self.root, dnx, dny, dax, day))
+    
+    def morir(self):
+        self.destruir()
+        self.root.fin_juego()
+        self.dibujar()
     

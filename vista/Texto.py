@@ -39,5 +39,5 @@ class Texto():
                 self.canvas.itemconfig(self.texto, fill="black")
                 self.canvas.itemconfig(self.fondo, fill="white")
 
-        self.canvas.tag_raise(self.texto)
+        self.canvas.tag_raise(self.texto, self.fondo)
         
