@@ -26,7 +26,13 @@ class Ventana():
     def iniciar_Juego(self):
         self.frInicio.place_forget()
         self.ventana.config(width=600, height=500)
-        Juego(self.ventana, self.jugador)
+        self.juego = Juego(self.ventana, self.jugador)
+        self.juego.iniciar()
+
+    def cerrar(self):
+        if self.juego:
+            self.juego.detener()
+        self.ventana.destroy()
 
     def __init__(self):
         self.ventana = tk.Tk()
@@ -37,6 +43,7 @@ class Ventana():
 
         self.login = False
         self.jugador = None
+        self.juego = None
 
         self.frInicio = Frame(self.ventana)
         self.frInicio.place(relx=0.5, rely=0.4, anchor="center")
@@ -49,5 +56,6 @@ class Ventana():
         self.regisBtn = Button(self.frInicio, text="Registrarse", command=self.registrar)
         self.regisBtn.pack()
 
+        self.ventana.protocol("WM_DELETE_WINDOW", self.cerrar)
 
         self.ventana.mainloop()
