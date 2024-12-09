@@ -7,6 +7,7 @@ class Objeto():
         self.setInputTeclado = root.set_evento_teclado
         self.x = x
         self.y = y
+        self.destruyendo = False
 
 
     def dibujar(self):
@@ -16,4 +17,4 @@ class Objeto():
         pass
 
     def destruir(self):
-        pass
+        self.destruyendo = True

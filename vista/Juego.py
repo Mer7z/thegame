@@ -3,7 +3,9 @@ import tkinter as tk
 import random
 from vista.Asteroide import Asteroide
 from vista.Nave import Nave
+from vista.Bala import Bala
 import time
+import math
 import threading as th
 
 class Juego():
@@ -22,9 +24,17 @@ class Juego():
 
         self.dibujar_estrellas()
 
+        self.tiempo = 0
+        self.puntos = 0
+        self.contadorKills = 0
+        self.kills = 0
+        self.dificultad = 0
+
+        self.nave = Nave(self, 300, 450)
+        self.selAsteroide = None
         self.objetos = [
-            Asteroide(self, 300, 250),
-            Nave(self, 300, 450)
+            self.nave,
+            Asteroide(self, 300, 250, self.nave),
         ] 
 
         
@@ -40,10 +50,9 @@ class Juego():
 
     def dibujarObjetos(self):
         while self.ejecutar:
-            tiempo_inicial = time.perf_counter()
             for objeto in self.objetos:
                 objeto.dibujar()
-            tiempo_final = time.perf_counter()
+            time.sleep(0.001)
 
     def procesarObjetos(self):
         delta = 0
@@ -52,6 +61,7 @@ class Juego():
             tiempo_actual = time.perf_counter()
             delta = tiempo_actual - tiempo_inicial
             tiempo_inicial = tiempo_actual
+            self.procesarCuadro(delta)
             for objeto in self.objetos:
                 objeto.procesarCuadro(delta)
             time.sleep(0.001)
@@ -64,12 +74,63 @@ class Juego():
                 self.root.update()
 
     def presionarTecla(self, event):
-        print(event.keysym)
+        key = event.keysym
+        if not self.selAsteroide:
+            self.elegir_asteroide(key)
+        else:
+            if self.selAsteroide.recibir_disparo(key):
+                self.nave.disparar(self.selAsteroide)
+        
         for e in self.eventosTecla:
             e(event)
 
     def set_evento_teclado(self, evento):
         self.eventosTecla.append(evento)
+    
+    def procesarCuadro(self, delta):
+
+        if self.contadorKills >= 10:
+            self.contadorKills = 0
+            self.dificultad += 1
+
+        self.tiempo += delta
+        maxtime = 5
+        if maxtime - (0.5 * self.dificultad) > 1:
+            maxtime = maxtime - (0.5 * self.dificultad)
+        else:
+            maxtime = 1
+        
+        if self.tiempo >= maxtime:
+            self.tiempo = 0
+            for _ in range(math.floor(0.3 * self.dificultad) + 3):
+                self.spawnear_asteroide()
+
+    def spawnear_asteroide(self):
+        randx = random.randint(0, 600)
+        randy = random.randint(-30, -20)
+        rands = random.randint(20, 30)
+        self.objetos.append(Asteroide(self, randx, randy, self.nave, rands, 40 + (0.5 * self.dificultad )))       
+
+    def elegir_asteroide(self, letra):
+        minA = None
+        for asteroide in self.objetos:
+            if type(asteroide) == Asteroide:
+                if asteroide.palabra.lower().startswith(letra):
+                    if not minA:
+                        minA = asteroide
+                    else:
+                        if minA.distancia > asteroide.distancia:
+                            minA = asteroide
+        if minA:
+            self.selAsteroide = minA
+            self.selAsteroide.seleccionar(True)
+            if self.selAsteroide.recibir_disparo(letra):
+                self.nave.disparar(self.selAsteroide)
+    
+    def add_kill(self):
+        self.kills += 1
+        self.contadorKills += 1
+        self.puntos+= 100
 
     def dibujar_estrellas(self):
         self.canvas.delete("estrellas")
