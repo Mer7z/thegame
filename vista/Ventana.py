@@ -51,7 +51,11 @@ class Ventana():
     
     def obtener_jugadores(self):
         try:
-            return Jugador().obtener_jugadores()
+            datos = Jugador().obtener_jugadores()
+            if datos:
+                return datos
+            else:
+                return []
         except:
             return []
 
@@ -77,6 +81,7 @@ class Ventana():
         self.login = False
         self.jugador = None
         self.juego = None
+        self.datos = []
 
         self.frInicio = Frame(self.ventana)
         self.frInicio.place(relx=0.5, rely=0.4, anchor="center")
@@ -104,7 +109,6 @@ class Ventana():
         # Empaquetar widgets
         self.tabla.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.datos = []
         
         self.ingresar_datos_tabla()
 

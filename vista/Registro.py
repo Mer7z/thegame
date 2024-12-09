@@ -10,6 +10,8 @@ class Registro(Login):
                 if mijugador:
                     self.root.setJugador(mijugador)
                     self.ventana.destroy()
+                else:
+                    self.lblErr.config(text="Error en la base de datos. Verifique la conexión")
             except Exception as e:
                 self.lblErr.config(text=e)
         else:
