@@ -10,6 +10,7 @@ class Nave(Objeto):
         self.objeto_canvas = None
         self.coordenadas = []
         self.image = PhotoImage(file="avatars/nave (1).png")  # Cargar la imagen de la nave
+        self.image = self.image.subsample(2, 2) # Reduce el tamaño de la imagen
         self.image_width = self.image.width()  # Obtener el ancho de la imagen
         self.image_height = self.image.height() 
         
@@ -29,10 +30,10 @@ class Nave(Objeto):
         pass
 
     def disparar(self, asteroide):
-        dnx = self.x + self.image_width / 2  # Ajustar según el tamaño de la imagen
-        dny = self.y + self.image_height / 2
-        dax = asteroide.x + (asteroide.coordenadas[2] - asteroide.x) / 2
-        day = asteroide.y + (asteroide.coordenadas[3] - asteroide.y) / 2
+        dnx = self.x
+        dny = self.y
+        dax = asteroide.x
+        day = asteroide.y
         self.root.objetos.append(Bala(self.root, dnx, dny, dax, day))
     
     def morir(self):
