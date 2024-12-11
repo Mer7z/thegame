@@ -1,13 +1,19 @@
 from vista.Objeto import Objeto
+import pygame
 
 class Bala(Objeto):
+
+    pygame.mixer.init()
+
+    sonido_bala = pygame.mixer.Sound(r"sonidos\laser.mp3")
+
     def __init__(self, root, x, y, x2, y2, width= 3):
         super().__init__(root, x, y)
         self.objeto_canvas = None
         self.x2 = x2
         self.y2 = y2
         self.width = width
-
+        self.sonido_bala.play()
         self.tiempo = 0.2
 
     def dibujar(self):
