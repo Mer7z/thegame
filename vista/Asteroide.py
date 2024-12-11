@@ -1,5 +1,7 @@
 from vista.Objeto import Objeto
 from vista.Texto import Texto
+import random
+from tkinter import PhotoImage
 
 class Asteroide(Objeto):
     def __init__(self, root, x, y, nave, size = 20, velocidad = 40, palabra = "", puntos = 100, tag = ""):
@@ -16,6 +18,12 @@ class Asteroide(Objeto):
 
         self.palabra = palabra
         self.velocidad = velocidad
+
+
+        self.image1 = PhotoImage(file="avatars/mine.png")
+        self.image2 = PhotoImage(file="avatars/oppressor.png")
+
+        self.image = random.choice([self.image1, self.image2])
 
         self.hijos = [
             Texto(self, 17, 17, self.seleccionado)
@@ -39,9 +47,9 @@ class Asteroide(Objeto):
                     break
             return
         if not self.objeto_canvas:
-            self.objeto_canvas = self.canvas.create_rectangle(self.x, self.y, self.x+self.size, self.y+self.size, fill="#8f2525", outline="black", tags=self.tag)
+            self.objeto_canvas = self.canvas.create_image(self.x, self.y, image=self.image, tags=self.tag)
         else:
-            self.canvas.coords(self.objeto_canvas, self.x, self.y, self.x+self.size, self.y+self.size)
+            self.canvas.coords(self.objeto_canvas,self.x, self.y)
 
         self.coordenadas = self.canvas.bbox(self.objeto_canvas)
 
