@@ -2,8 +2,13 @@ from vista.Objeto import Objeto
 from vista.Texto import Texto
 import random
 from tkinter import PhotoImage
+import pygame
 
 class Asteroide(Objeto):
+
+    pygame.mixer.init()
+    sonido_exp_asteroide = pygame.mixer.Sound(r"sonidos\impacto.mp3")
+
     def __init__(self, root, x, y, nave, size = 20, velocidad = 40, palabra = "", puntos = 100, tag = ""):
         super().__init__(root, x, y)
         self.nave = nave
@@ -82,6 +87,7 @@ class Asteroide(Objeto):
             if not self.palabra:
                 self.root.add_kill(self.puntos)
                 self.destruir()
+                self.sonido_exp_asteroide.play()
             return True
         else:
             return False

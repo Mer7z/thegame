@@ -7,6 +7,7 @@ from vista.Bala import Bala
 import time
 import math
 import threading as th
+from vista.Tips import add_tooltip
 
 class Juego():
     def __init__(self, root, jugador):
@@ -44,8 +45,10 @@ class Juego():
         self.txtPuntos = self.canvas.create_text(20, 450, text=f"Puntos: {self.puntos}", font=("Arial", 17), anchor="w", fill="white")
         self.txtKills = self.canvas.create_text(20, 425, text=f"Bajas: {self.puntos}", font=("Arial", 17), anchor="w", fill="white")
 
-        self.btnSalir = Button(self.frJuego, text="Salir", command=self.root.salir_juego)
-        self.btnReiniciar = Button(self.frJuego, text="Reniciar", command=self.root.reiniciar_juego)
+        self.btnSalir = Button(self.frJuego, text="Salir", command=self.root.salir_juego, bg="gray30", fg="white")
+        self.btnReiniciar = Button(self.frJuego, text="Reniciar", command=self.root.reiniciar_juego, bg="gray30", fg="white")
+        add_tooltip(self.btnSalir, "Haz clic aquí para salir del juego.")
+        add_tooltip(self.btnReiniciar, "Haz clic aquí para reiniciar el juego.")
 
         self.nave = Nave(self, 300, 450)
         self.selAsteroide = None

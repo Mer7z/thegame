@@ -6,6 +6,7 @@ from vista.Login import Login
 from vista.Registro import Registro
 from vista.Juego import Juego
 from controlador.Jugador import Jugador
+from vista.Tips import add_tooltip
 
 class Ventana():
 
@@ -73,7 +74,7 @@ class Ventana():
 
     def __init__(self):
         self.ventana = tk.Tk()
-        self.ventana.title("🌟 Naves y Asteroides 🌌") # Ponganle un titulo
+        self.ventana.title("🌟 Naves y Asteroides 🌌") 
         self.ventana.config(width=400, height=400, bg="black")
         # self.ventana.geometry("400x300")
         self.ventana.resizable(0,0)
@@ -86,16 +87,34 @@ class Ventana():
         self.frInicio = Frame(self.ventana, bg="black")
         self.frInicio.place(relx=0.5, rely=0.4, anchor="center")
 
-        self.label = Label(self.frInicio, text="🚀 Naves y Asteroides: El Juego 🚀", fg="white", bg="black", font=("Helvetica", 16, "bold"))
+        self.label = Label(self.frInicio, text="🚀 Naves y Asteroides 🚀", fg="white", bg="black", font=("Helvetica", 16, "bold"))
         self.label.pack(pady=10)
 
-        self.loginBtn = Button(self.frInicio, text="Iniciar Sesión", command=self.iniciarSesion, bg="gray", fg="white")
+        self.loginBtn = Button(self.frInicio, text="Iniciar Sesión", command=self.iniciarSesion, bg="gray30", fg="white")
         self.loginBtn.pack(pady=5)
+        add_tooltip(self.loginBtn, "Haz clic aquí para iniciar sesión.")
 
-        self.regisBtn = Button(self.frInicio, text="Registrarse", command=self.registrar, bg="gray", fg="white")
+        self.regisBtn = Button(self.frInicio, text="Registrarse", command=self.registrar, bg="gray30", fg="white")
         self.regisBtn.pack(pady=5)
+        add_tooltip(self.regisBtn, "Haz clic aquí para registrarte como nuevo usuario.")
 
-        self.tabla = ttk.Treeview(self.frInicio, columns=("Jugador", "Puntaje"), show="headings", height=10)
+        style = ttk.Style()
+        style.theme_use("default")
+
+        style.configure("Custom.Treeview", 
+                        background="gray20",  # Fondo de las filas
+                        foreground="white",  # Texto
+                        fieldbackground="gray10",  # Fondo general
+                        rowheight=25)  # Altura de las filas
+
+        style.configure("Custom.Treeview.Heading", 
+                        background="gray30",  # Fondo del encabezado
+                        foreground="white",  # Texto del encabezado
+                        font=("Helvetica", 10, "bold"))  # Fuente del encabezado
+
+        style.map("Custom.Treeview", background=[("selected", "darkgray")])  # Fondo de la fila seleccionada
+
+        self.tabla = ttk.Treeview(self.frInicio, columns=("Jugador", "Puntaje"), show="headings", height=7, style="Custom.Treeview")
 
         # Configuración de encabezados
         self.tabla.heading("Jugador", text="Jugador")

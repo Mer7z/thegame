@@ -1,5 +1,6 @@
 from vista.Login import Login
 from controlador.Jugador import Jugador
+from vista.Tips import add_tooltip
 
 class Registro(Login):
 
@@ -21,4 +22,5 @@ class Registro(Login):
         super().__init__(root)
         self.ventana.title("Registrarse")
         self.lblTitulo.config(text="Registro")
-        self.btnLogin.config(text="Registrarse")
+        self.btnLogin.config(text="Registrarse",bg="gray30", fg="white")
+        add_tooltip(self.btnLogin, "Haz clic aquí para terminar el registro e iniciar sesión.")

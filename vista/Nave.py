@@ -1,8 +1,15 @@
 from vista.Objeto import Objeto
 from vista.Bala import Bala
 from tkinter import PhotoImage
+import pygame
 
 class Nave(Objeto):
+
+    pygame.mixer.init()
+
+    sonido_nave = pygame.mixer.Sound(r"sonidos\sonidonave.mp3")
+    sonido_muere = pygame.mixer.Sound(r"sonidos\explosion_nave.mp3")
+
     def __init__(self, root, x, y, size = 20, tag = ""):
         super().__init__(root, x, y)
         self.size = size
@@ -13,6 +20,7 @@ class Nave(Objeto):
         self.image = self.image.subsample(2, 2) # Reduce el tamaño de la imagen
         self.image_width = self.image.width()  # Obtener el ancho de la imagen
         self.image_height = self.image.height() 
+        self.sonido_nave.play(loops=-1)
         
 
     def dibujar(self):
@@ -40,4 +48,6 @@ class Nave(Objeto):
         self.destruir()
         self.root.fin_juego()
         self.dibujar()
+        self.sonido_nave.stop()
+        self.sonido_muere.play()
     

@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from controlador.Jugador import Jugador
+from vista.Tips import add_tooltip
 
 class Login():
 
@@ -32,7 +33,8 @@ class Login():
         self.root = root
         self.ventana = Toplevel(root.ventana)
         self.ventana.title("Iniciar Sesión")
-        self.ventana.geometry("300x300")
+        self.ventana.geometry("200x250")
+        self.ventana.resizable(0,0)
 
         self.nombre = ""
         self.clave = ""
@@ -56,8 +58,9 @@ class Login():
         self.lblErr = Label(self.ventana, text="", fg="red")
         self.lblErr.pack(pady=5)
 
-        self.btnLogin = Button(self.ventana, text="Iniciar Sesión")
+        self.btnLogin = Button(self.ventana, text="Iniciar Sesión",bg="gray30", fg="white")
         self.btnLogin.pack(pady=10)
+        add_tooltip(self.btnLogin, "Haz clic aquí para iniciar sesión.")
 
         self.btnLogin.bind("<Button-1>", self.iniciarSesion)
 
