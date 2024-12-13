@@ -73,8 +73,8 @@ class Ventana():
 
     def __init__(self):
         self.ventana = tk.Tk()
-        self.ventana.title("The Game") # Ponganle un titulo
-        self.ventana.config(width=400, height=400)
+        self.ventana.title("🌟 Naves y Asteroides 🌌") # Ponganle un titulo
+        self.ventana.config(width=400, height=400, bg="black")
         # self.ventana.geometry("400x300")
         self.ventana.resizable(0,0)
 
@@ -83,16 +83,17 @@ class Ventana():
         self.juego = None
         self.datos = []
 
-        self.frInicio = Frame(self.ventana)
+        self.frInicio = Frame(self.ventana, bg="black")
         self.frInicio.place(relx=0.5, rely=0.4, anchor="center")
 
-        self.label = Label(self.frInicio, text="Naves y Asteroides: El Juego")
-        self.label.pack()
-        self.loginBtn = Button(self.frInicio, text="Iniciar Sesión", command=self.iniciarSesion)
-        self.loginBtn.pack()
+        self.label = Label(self.frInicio, text="🚀 Naves y Asteroides: El Juego 🚀", fg="white", bg="black", font=("Helvetica", 16, "bold"))
+        self.label.pack(pady=10)
 
-        self.regisBtn = Button(self.frInicio, text="Registrarse", command=self.registrar)
-        self.regisBtn.pack()
+        self.loginBtn = Button(self.frInicio, text="Iniciar Sesión", command=self.iniciarSesion, bg="gray", fg="white")
+        self.loginBtn.pack(pady=5)
+
+        self.regisBtn = Button(self.frInicio, text="Registrarse", command=self.registrar, bg="gray", fg="white")
+        self.regisBtn.pack(pady=5)
 
         self.tabla = ttk.Treeview(self.frInicio, columns=("Jugador", "Puntaje"), show="headings", height=10)
 
