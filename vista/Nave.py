@@ -2,6 +2,7 @@ from vista.Objeto import Objeto
 from vista.Bala import Bala
 from tkinter import PhotoImage
 import pygame
+from vista.Explosion import Explosion
 
 class Nave(Objeto):
 
@@ -26,6 +27,7 @@ class Nave(Objeto):
     def dibujar(self):
         if self.destruyendo:
             self.canvas.delete(self.objeto_canvas)
+            self.root.objetos.append(Explosion(self.root, self.x, self.y))
             return
         if not self.objeto_canvas:
             # Usar create_image para dibujar la imagen

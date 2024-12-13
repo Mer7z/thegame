@@ -3,6 +3,7 @@ from vista.Texto import Texto
 import random
 from tkinter import PhotoImage
 import pygame
+from vista.Explosion import Explosion
 
 class Asteroide(Objeto):
 
@@ -50,6 +51,7 @@ class Asteroide(Objeto):
                 if objeto == self:
                     self.root.objetos.remove(objeto)
                     break
+            self.root.objetos.append(Explosion(self.root, self.x, self.y))
             return
         if not self.objeto_canvas:
             self.objeto_canvas = self.canvas.create_image(self.x, self.y, image=self.image, tags=self.tag)
