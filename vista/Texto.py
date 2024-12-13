@@ -38,6 +38,8 @@ class Texto():
             else:
                 self.canvas.itemconfig(self.texto, fill="black")
                 self.canvas.itemconfig(self.fondo, fill="white")
-
-        self.canvas.tag_raise(self.texto, self.fondo)
+            
+            self.canvas.tag_raise(self.texto, self.padre.objeto_canvas)
+            self.canvas.tag_raise(self.fondo, self.padre.objeto_canvas)
+            self.canvas.tag_raise(self.texto, self.fondo)
         

@@ -80,6 +80,10 @@ class Asteroide(Objeto):
 
     def seleccionar(self, selec):
         self.seleccionado = selec
+        if self.seleccionado:
+            self.canvas.tag_raise(self.objeto_canvas)
+        else:
+            self.canvas.tag_lower(self.objeto_canvas)
         for h in self.hijos:
             h.selec = selec
     
